@@ -1,0 +1,94 @@
+---
+title: "Example Code"
+author: "Zoe Dellaert"
+date: "02/20/2020"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE,warning=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE,tidy=TRUE)
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(lsmeans)
+library(mosaic)
+library(quantmod)
+library(lattice)
+library(grid)
+library(lindia)
+```
+
+## Workflow for extracting surface profiles:
+
+- Drag all images into Fiji
+- Make Images —> Stack
+- Crop bottom bar out (which automatically crops it out of the whole stack)
+- Process > Enhance Contrast (.3%, check all 4 boxes)
+- Unfortunately, scale has to be set for each image manually. To do this, I use the pixel length data from the uncropped image 
+- Analyze > Set Scale (Distance in pixels = 1, known distance = # from image, unit = nm)
+- Draw a line segment perpendicular to spine axis of ~2500nm
+- Press Command+b to set this in place
+- Drag the line segment down the spine and repeat, ending w/ 10 segments
+- Image > Overlay > To ROI Manager
+- In the ROI Manager window, with no segments selected (click Deselect), go to More >> Multi Plot
+- Save surface profile coordinates as imagename.csv in appropriate folder.
+
+# Example code: Roughness measurements
+Shown below is an example of the code that I use in order to extract roughness values from the surface profiles of the images.
+```{r,eval=FALSE}
+AC_Polyps <- c("AC1a_a","AC1b_a","AC1b_b","AC1b_c","AC2_a","AC2_b")
+
+for (i in AC_Polyps) {
+  setwd(paste("~/Rdirectorycoral/Profiles Aug21 - Normalized/AC/",i,sep=""))
+  assign(paste("roughness", i, sep = ""), sapply(lapply(list.files(full.names=TRUE,recursive = TRUE),
+                                                        function(i){ts(read.csv(i)$Y)}), function(i){roughness(i,std = FALSE)}))
+  assign(paste("image_names",i,sep=""), list.files())
+  }
+
+#by image
+AC_images_vector <- unlist(lapply(AC_Polyps, function(i){paste("image_names",i,sep="")}))
+AC_images <- unlist(lapply(AC_images_vector,function(s) eval(parse(text=s))))
+roughnessAC_lines_Aug30_images <- unlist(lapply(AC_images,function(i){rep(i,10)}))
+
+for (i in AC_images) {
+  name <- paste("~/Rdirectorycoral/Profiles Aug21 - Normalized-image/AC/",i,sep="")
+  setwd(name)
+  assign(paste("Iroughness", i, sep = ""), sapply(lapply(list.files(full.names=TRUE,recursive = TRUE),
+                                                         function(i){ts(read.csv(i)$Y)}), function(i){roughness(i,std = FALSE)}))}
+
+roughnessAC_image_names_Aug30 <- sapply(AC_images, function(i){paste("Iroughness", i, sep = "")}, USE.NAMES = FALSE) 
+
+IroughnessAC_Aug30 <- unlist(lapply(roughnessAC_image_names_Aug30,
+                                    function(s) mean(eval(parse(text=s)))))
+IroughnessAC_sd_Aug30 <- unlist(lapply(roughnessAC_image_names_Aug30,
+                                       function(s) sd(eval(parse(text=s)))))
+IroughnessAC_se_Aug30 <- unlist(lapply(roughnessAC_image_names_Aug30,
+                                       function(s) sd(eval(parse(text=s)))/sqrt(length(eval(parse(text=s))))))
+```
+
+By using this process on my entire data set of 133 images, I am able to create a data table such as shown below. 
+
+```{r,eval=FALSE}
+RoughnessDF_byImage <- data.frame("Treatment" = c(rep("15º Aposymbiotic",20),rep("15º Symbiotic",28),rep("27º Aposymbiotic",25),
+                                 rep("27º Symbiotic",19), rep("Amb. Aposymbiotic",19),rep("Amb. Symbiotic",22)),
+                 "Temp" = c(rep("15º",48),rep("27º",44),rep("20º",19+22)),
+                 "Group" = c(rep("Aposymbiotic",20),rep("Symbiotic",28),rep("Aposymbiotic",25),
+                             rep("Symbiotic",19),rep("Aposymbiotic",19),rep("Symbiotic",22)), 
+                 "Names" = c(AC_images,SC_images,AH_images,SH_images,AW_images,SW_images), 
+                 "Roughness" = c(IroughnessAC_Aug30,IroughnessSC_Aug30,IroughnessAH_Aug30,
+                                 IroughnessSH_Aug30,IroughnessAW_Aug30,IroughnessSW_Aug30), 
+                 "SD" = c(IroughnessAC_sd_Aug30,IroughnessSC_sd_Aug30,IroughnessAH_sd_Aug30,
+                          IroughnessSH_sd_Aug30,IroughnessAW_sd_Aug30,IroughnessSW_sd_Aug30),
+                 "SE" = c(IroughnessAC_se_Aug30,IroughnessSC_se_Aug30,IroughnessAH_se_Aug30,
+                          IroughnessSH_se_Aug30,IroughnessAW_se_Aug30,IroughnessSW_se_Aug30),
+                 "Roughness_Log" = c(IroughnessAC_Aug30_LOG,IroughnessSC_Aug30_LOG,IroughnessAH_Aug30_LOG,
+                                     IroughnessSH_Aug30_LOG,IroughnessAW_Aug30_LOG, IroughnessSW_Aug30_LOG))
+```
+
+```{r}
+RoughnessDF_byImage <- read_csv("RoughnessDF_byImage.csv")
+head(RoughnessDF_byImage)
+```
+
