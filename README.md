@@ -1,5 +1,5 @@
 # CalcificationAstrangia
-Electronic supplementary material (Data and Code) to Dellaert et al. 2020
+Electronic supplementary material (Data and Code) to Dellaert et al. 2021
 
 ## File overview
 
