@@ -7,11 +7,11 @@ Electronic supplementary material (Data and Code) to Dellaert et al. 2021
 
 **Symbiont_density.xlsx** Symbiont density data used for Table 1.
 
-**RoughnessDF_byImage.csv** Roughness data for each image, used for Figure 4. 
+**RoughnessDF_byImage.csv** Roughness data for each image, used for Figure 4.
+
+**FMP200_Adaptive_Equalization.csv** Texture Analysis (FMP) data, used for Figure 5. 
 
 **Roughness_FMP_Transforms.csv** Roughness and Texture Analysis (FMP) data and transformed values, labelled by colony, polyp, and image. Used for Figures 4 & 5. 
-
-**RoughnessDF_byImage.csv** Roughness data for each image, used for Figure 4. 
 
 **Roughness-Example-Code.Rmd** Code and workflow to perform roughness analysis on SEM images.
 
