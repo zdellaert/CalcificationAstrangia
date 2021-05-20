@@ -1,5 +1,5 @@
 # CalcificationAstrangia
-Electronic supplementary material (Data and Code) to accompany the manuscript: Uncovering the effects of symbiosis and temperature on coral calcification (Dellaert et al. 2021)
+Data and analysis to accompany the manuscript: Uncovering the effects of symbiosis and temperature on coral calcification (Dellaert et al. 2021)
 
 ## File overview
 
