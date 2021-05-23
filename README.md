@@ -3,15 +3,15 @@ Data and analysis to accompany the manuscript: Uncovering the effects of symbios
 
 ## File overview
 
-**MassChange.csv** Buoyant weight data used for Figure 2. 
+**%MassChange.csv** Buoyant weight data used for Figure 2. 
 
 **Symbiont_density.xlsx** Symbiont density data used for Table 1.
 
-**RoughnessDF_byImage.csv** Roughness data for each image, used for Figure 4.
+**RoughnessDF_byImage.csv** Roughness data for each image, used for Figure 3.
 
 **FMP200_Adaptive_Equalization.csv** Texture Analysis (FMP) data, used for Figure 5. 
 
-**Roughness_FMP_Transforms.csv** Roughness and Texture Analysis (FMP) data and transformed values, labelled by colony, polyp, and image. Used for Figures 4 & 5. 
+**Roughness_FMP_Transforms.csv** Roughness and Texture Analysis (FMP) data and transformed values, labelled by colony, polyp, and image. Used for Figures 3 & 5. 
 
 **Roughness-Example-Code.Rmd** Code and workflow to perform roughness analysis on SEM images.
 
